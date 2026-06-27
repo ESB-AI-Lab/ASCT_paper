@@ -1,0 +1,8 @@
+begin mrbayes;
+    set autoclose=yes nowarn=yes;
+    lset nst=6 rates=invgamma;       [GTR+I+G for nucleotide data]
+    prset brlenspr=unconstrained:exp(10.0);
+    mcmc ngen=1000000 samplefreq=100 printfreq=1000 nchains=4 nruns=2;
+    sumt burnin=2500;
+    sump burnin=2500;
+end;

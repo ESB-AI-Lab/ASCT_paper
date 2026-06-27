@@ -1,0 +1,1 @@
+../bash_prank.sh

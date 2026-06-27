@@ -1,0 +1,90 @@
+# ==============================================================================
+# ASCT SYNTENY ANALYSIS CONFIGURATION
+# ==============================================================================
+# All paths are relative to this file's directory unless absolute.
+# ==============================================================================
+
+project_name: "ASCT_synteny"
+
+# ── Input directories ──
+bed_dir: "./"             # contains {species}_ASCT_mRNA.bed files
+fasta_dir: "genomes"        # contains genome FASTAs (assembly names)
+output_dir: "results"
+
+# ── Species tree (MrBayes output) ──
+# Accepts Newick (.nwk/.tre) or Nexus (.nex/.con.tre) format.
+# Tip labels must match species codes (Mcal, Rphi, etc.)
+species_tree: "phylo_tree/output.best.nex.con.tre"
+# If your MrBayes .con.tre has different tip labels, set this to map them:
+# tree_tip_map:
+#   "Mytilus_californianus": "Mcal"
+#   "Ruditapes_philippinarum": "Rphi"
+
+# ── Species map: assembly_substring → species_code ──
+# BED files are named by species_code (e.g. Rphi_ASCT_mRNA.bed)
+# FASTA files contain the assembly_substring in their filename
+species_map:
+  xbMytCali: Mcal
+  Mcoruscus: Mcor
+  PEIMed: Medi
+  xbMytGall: Mgal
+  xbArcSenh: Asen
+  ASM3737934: Pvir
+  Fh240107Braker: Fhep
+  Solemya_velum: Svel
+  "xgPatVulg1.2": Pvul
+  "xgHalRufe1.0.p": Hruf
+  ASM307304v1: Pcan
+  ASM634580v1: Osin
+  ASM4765235v1: Npom
+  CUHK_Ljap: Lsin
+  Owenia_chromosome: Ofus
+  Genome_assembly: Mmre
+  MarmarV2: Mmar
+  Upi_BIV9798: Upic
+  MADL_Memer: Mmrc
+  ASM2657151v2: Rphi
+  "xPecMax1.1": Pmax
+  "xbMagGiga1.1": Mgig
+  Ai_NY: Airr
+
+# ── Extraction settings ──
+gene_flank_bp: 50000             # bp flanking around EACH gene copy (not between copies)
+extract_mode: "flank"            # "flank" for ±gene_flank_bp per copy, "contig" for full contigs
+
+# ── Alignment settings ──
+aligner: "minimap2"              # "minimap2" or "blastn"
+minimap2_path: "/gpool/bin/minimap2-2.30_x64-linux/minimap2"
+pct_divergence: 50               # expected % nucleotide divergence
+                                  # 1     → asm5 (handles <1%)
+                                  # 5     → asm10 (handles 1-5%)
+                                  # 10    → asm20 (handles 5-10%)
+                                  # 15-50 → custom params, increasingly sensitive
+min_alignment_length: 200        # minimum bp to draw a link
+min_identity: 20                 # minimum % identity for links (low for 400 Mya)
+merge_distance: 50000            # merge links within this many bp into one ribbon
+threads: 36
+
+# ── Plot settings ──
+max_track_size: 500000           # max bp shown per track (caps zoom for huge contigs)
+auto_orient: true                # auto-detect and flip inverted tracks
+flip_species: []                 # manually flip these species (e.g. ["Mcal", "Mgal"])
+# Copy colors — Wong (2011) Nature Methods colorblind-safe palette
+copy_colors:
+  - "#0072B2"   # copy 1 — blue
+  - "#E69F00"   # copy 2 — orange
+  - "#009E73"   # copy 3 — bluish green
+  - "#CC79A7"   # copy 4 — reddish purple
+  - "#D55E00"   # copy 5 — vermillion
+  - "#56B4E9"   # copy 6 — sky blue
+
+# Identity shading for alignment links (colorblind-safe)
+identity_colormap:
+  high: "#0072B2"    # ≥90% — blue
+  mid: "#E69F00"     # 70-90% — orange
+  low: "#D55E00"     # <70% — vermillion
+
+# Figure dimensions
+figure_width: 22
+track_height: 0.6
+link_alpha: 0.35
